@@ -12,7 +12,7 @@ public class SlashCommands {
 
     public static void ping(SlashCommandInteractionEvent event) {
         if (event.getOption("type") == null || event.getOption("type").getAsBoolean())
-            event.reply("pong!\nmy ping is: " + event.getJDA().getGatewayPing()+"ms").queue();
+            event.reply("pong!\nmy ping is: " + event.getJDA().getGatewayPing() + "ms").queue();
         else {
             long time = System.currentTimeMillis();
             event.reply("Pong!").flatMap(v ->
