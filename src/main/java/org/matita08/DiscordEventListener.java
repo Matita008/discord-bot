@@ -32,13 +32,14 @@ public class DiscordEventListener extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent event) {
         for (Guild g : bot.getShardManager().getGuilds()) {
             loadSlashCommands(g);
+            loadBaseSettings(g);
         }
     }
 
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
         loadSlashCommands(event.getGuild());
-
+        loadBaseSettings(event.getGuild());
     }
 
     @Override
