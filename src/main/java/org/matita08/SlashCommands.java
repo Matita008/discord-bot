@@ -43,7 +43,7 @@ public class SlashCommands {
             case 2 -> getGuildSettings(event.getGuild()).leave = c;
         }
         TextChannel t = getGuildSettings(event.getGuild()).logChannel == null ? (TextChannel) event.getChannel() : getGuildSettings(event.getGuild()).logChannel;
-        t.sendMessage(event.getOption("type").getName() + " was just set to " + c.getAsMention() + " by " + event.getUser().getAsMention()).queue();
+        t.sendMessage(event.getOption("type").toString() + " was just set to " + c.getAsMention() + " by " + event.getUser().getAsMention()).queue();
     }
 
     public static void ticket(SlashCommandInteractionEvent event) {

@@ -25,7 +25,7 @@ public class Events {
     public static void leave(@NotNull GuildMemberRemoveEvent event) {
         GuildSettings s = getGuildSettings(event.getGuild());
         if (s == null) return;
-        TextChannel t = (TextChannel) s.join;
+        TextChannel t = (TextChannel) s.leave;
         EmbedBuilder e = new EmbedBuilder();
         e.setColor(Color.RED);
         e.setTitle("Welcome to " + s.guild.getName());
