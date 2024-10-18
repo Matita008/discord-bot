@@ -1,6 +1,9 @@
 package org.matita08;
 
+import net.dv8tion.jda.api.entities.channel.*;
 import net.dv8tion.jda.api.events.interaction.command.*;
+
+import static org.matita08.Utilities.*;
 
 public class SlashCommands {
     public static void hello(SlashCommandInteractionEvent event) {
@@ -19,5 +22,21 @@ public class SlashCommands {
                     event.getHook().editOriginalFormat("Pong: %d ms", System.currentTimeMillis() - time) // then edit original
             ).queue(); // Queue both reply and edit
         }
+    }
+
+    public static void setChannel(SlashCommandInteractionEvent event) {
+        if(!event.isFromGuild()) {
+            onlyGuidAccepted(event);
+            return;
+        }
+        Channel c = event.getOption("channel").getAsChannel();
+        switch (event.getOption("option").getAsInt()) {
+            case 1 -> getGuildSettings(event.getGuild()).join = c;
+            case 2 -> getGuildSettings(event.getGuild()).leave = c;
+        }
+    }
+
+    private static void onlyGuidAccepted(SlashCommandInteractionEvent event) {
+        event.reply("the interaction has failed since this command is for guilds ony (you are in DM)").queue();
     }
 }

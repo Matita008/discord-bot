@@ -24,6 +24,7 @@ public class DiscordEventListener extends ListenerAdapter {
         switch (event.getName().toLowerCase()) {
             case "hello" -> hello(event);
             case "ping" -> ping(event);
+            case "setchannel" -> setChannel(event);
         }
     }
 
@@ -46,5 +47,4 @@ public class DiscordEventListener extends ListenerAdapter {
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         join(event);
     }
-
 }
