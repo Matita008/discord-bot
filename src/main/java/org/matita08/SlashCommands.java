@@ -47,7 +47,7 @@ public class SlashCommands {
     }
 
     public static void ticket(SlashCommandInteractionEvent event) {
-        TextChannel c = event.getOption("textchannel") == null ? (TextChannel) event.getChannel() : (TextChannel) event.getOption("Channel").getAsChannel();
+        TextChannel c = event.getOption("textchannel") == null ? (TextChannel) event.getChannel() : (TextChannel) event.getOption("textchannel").getAsChannel();
         if (!c.canTalk()) {
             event.reply("i can't send messages/embed").setEphemeral(true).queue();
             return;
