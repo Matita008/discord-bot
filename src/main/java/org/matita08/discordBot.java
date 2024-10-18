@@ -1,6 +1,7 @@
 package org.matita08;
 
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.requests.*;
 import net.dv8tion.jda.api.sharding.*;
 import org.apache.commons.cli.*;
 
@@ -79,8 +80,9 @@ public class discordBot {
     private ShardManager buildShardManager(String token) throws LoginException {
         // It is often better to load your token in from an external file or environment variable, especially if you plan on publishing the source code.
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token);
+        builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_MESSAGES);
         builder.addEventListeners(new DiscordEventListener(this));
-        builder.setActivity(Activity.listening("your commands"));
+        builder.setActivity(Activity.customStatus("Trying to decifer what @matita08 is saying to me"));
         return builder.build();
     }
 

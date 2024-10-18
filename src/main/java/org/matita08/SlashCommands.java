@@ -1,7 +1,14 @@
 package org.matita08;
 
+import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.channel.*;
+import net.dv8tion.jda.api.entities.channel.concrete.*;
+import net.dv8tion.jda.api.entities.emoji.*;
 import net.dv8tion.jda.api.events.interaction.command.*;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.selections.*;
+
+import java.awt.*;
 
 import static org.matita08.Utilities.*;
 
@@ -25,18 +32,38 @@ public class SlashCommands {
     }
 
     public static void setChannel(SlashCommandInteractionEvent event) {
-        if(!event.isFromGuild()) {
+        event.reply("elaborating....").queue();
+        if (!event.isFromGuild() || event.getGuild() == null) {
             onlyGuidAccepted(event);
             return;
         }
         Channel c = event.getOption("channel").getAsChannel();
-        switch (event.getOption("option").getAsInt()) {
+        switch (event.getOption("type").getAsInt()) {
             case 1 -> getGuildSettings(event.getGuild()).join = c;
             case 2 -> getGuildSettings(event.getGuild()).leave = c;
         }
+        TextChannel t = getGuildSettings(event.getGuild()).logChannel == null ? (TextChannel) event.getChannel() : getGuildSettings(event.getGuild()).logChannel;
+        t.sendMessage(event.getOption("type").getName() + " was just set to " + c.getAsMention() + " by " + event.getUser().getAsMention()).queue();
     }
 
-    private static void onlyGuidAccepted(SlashCommandInteractionEvent event) {
+    public static void ticket(SlashCommandInteractionEvent event) {
+        TextChannel c = event.getOption("textchannel") == null ? (TextChannel) event.getChannel() : (TextChannel) event.getOption("Channel").getAsChannel();
+        if (!c.canTalk()) {
+            event.reply("i can't send messages/embed").setEphemeral(true).queue();
+            return;
+        }
+        EmbedBuilder e = new EmbedBuilder();
+        e.setColor(Color.CYAN);
+        e.setTitle("Open a new ticket");
+        e.setDescription("Seleziona la categoria");
+        event.reply("sending embed in " + c.getAsMention()).queue();
+        c.sendMessageEmbeds(e.build()).addActionRow(event.getOption("type").getAsBoolean() ? StringSelectMenu.create("new-ticket-type")
+                .addOption("Discord", "Discord", "Report a issue of the discord", Emoji.fromFormatted(":discord:1296934945956171857")).build()
+                : Button.primary("Discord", "Discord"))
+        ;
+    }
+
+    private static void onlyGuidAccepted(GenericCommandInteractionEvent event) {
         event.reply("the interaction has failed since this command is for guilds ony (you are in DM)").queue();
     }
 }
