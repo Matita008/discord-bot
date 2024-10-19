@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.requests.*;
 import net.dv8tion.jda.api.sharding.*;
 import org.apache.commons.cli.*;
+import org.matita08.listener.*;
 
 import javax.security.auth.login.*;
 
@@ -76,16 +77,29 @@ public class discordBot {
         c.();*/
     }
 
-    // The JDA Shardmanager instance, this is the brains of the entire bot. Without this, the bot doesn't boot.
+    /**
+     * @return the bot instance
+     */
+    public static discordBot getBot() {
+        return bot;
+    }
+
+    /**
+     * @param token The token of the bot
+     * @throws LoginException if it fails to login
+     */
     private ShardManager buildShardManager(String token) throws LoginException {
         // It is often better to load your token in from an external file or environment variable, especially if you plan on publishing the source code.
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token);
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_MESSAGES);
-        builder.addEventListeners(new DiscordEventListener(this));
+        builder.addEventListeners(new DiscordEventListener(this), new AdminListener());
         builder.setActivity(Activity.customStatus("Trying to decifer what @matita08 is saying to me"));
         return builder.build();
     }
 
+    /**
+     * @return the shard manager of the JDA
+     */
     public ShardManager getShardManager() {
         return shardManager;
     }
