@@ -60,8 +60,8 @@ public class Utilities {
      * @param g       the guild where you want to take the settings from
      * @param message the log message to send
      */
-    public static void log(@NotNull TextChannel c, @NotNull Guild g, String message) {
-        if (getGuildSettings(g) != null && getGuildSettings(g).logChannel != null)
+    public static void log(@NotNull TextChannel c, Guild g, String message) {
+        if (g != null && getGuildSettings(g) != null && getGuildSettings(g).logChannel != null)
             c = getGuildSettings(g).logChannel;
         c.sendMessage(message).queue();
     }

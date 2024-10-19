@@ -1,4 +1,4 @@
-package org.matita08;
+package org.matita08.listener;
 
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.*;
@@ -7,10 +7,12 @@ import net.dv8tion.jda.api.events.interaction.command.*;
 import net.dv8tion.jda.api.events.session.*;
 import net.dv8tion.jda.api.hooks.*;
 import org.jetbrains.annotations.*;
+import org.matita08.*;
+import org.matita08.tools.*;
 
-import static org.matita08.Events.*;
-import static org.matita08.SlashCommands.*;
-import static org.matita08.Utilities.*;
+import static org.matita08.listener.Events.*;
+import static org.matita08.listener.SlashCommands.*;
+import static org.matita08.tools.Utilities.*;
 
 public class DiscordEventListener extends ListenerAdapter {
     discordBot bot;
@@ -27,6 +29,7 @@ public class DiscordEventListener extends ListenerAdapter {
             case "ping" -> ping(event);
             case "ticket" -> ticket(event);
             case "setchannel" -> setChannel(event);
+            case "setrule" -> setrule(event);
             default -> unrecognized(event);
         }
     }
@@ -39,14 +42,15 @@ public class DiscordEventListener extends ListenerAdapter {
         while (guildsSettings == null || guildsSettings.length == 0) System.out.print(".");
         for (Guild g : bot.getShardManager().getGuilds()) {
             loadSlashCommands(g);
-            loadBaseSettings(g);
+            if (getGuildSettings(g) == null)
+                loadBaseSettings(g);
         }
         System.out.println("\nloaded");
     }
 
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
-        //System.out.println("new Guild received!");
+        //System.out.println("new tools received!");
         loadSlashCommands(event.getGuild());
         loadBaseSettings(event.getGuild());
     }
@@ -63,6 +67,11 @@ public class DiscordEventListener extends ListenerAdapter {
         leave(event);
     }
 
+    /**
+     * Replay to a slash event with a message sawing it wasn't recognised
+     *
+     * @param event the event to reply
+     */
     private void unrecognized(@NotNull SlashCommandInteractionEvent event) {
         //event.reply("the command " + event.getCommandString() + " wasn't recognized").queue();
         event.reply("the command " + event.getCommandString() + " wasn't recognized").setEphemeral(true).queue();

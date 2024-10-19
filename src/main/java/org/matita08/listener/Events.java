@@ -1,19 +1,21 @@
-package org.matita08;
+package org.matita08.listener;
 
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.channel.concrete.*;
 import net.dv8tion.jda.api.events.guild.member.*;
 import org.jetbrains.annotations.*;
+import org.matita08.tools.*;
 
 import java.awt.*;
 
-import static org.matita08.Utilities.*;
+import static org.matita08.tools.Utilities.*;
 
 public class Events {
     public static void join(GuildMemberJoinEvent event) {
         GuildSettings s = getGuildSettings(event.getGuild());
-        if (s == null) return;
-        TextChannel t = (TextChannel) s.join;
+        assert s != null;
+        TextChannel t = s.join;
+        if (t == null) return;
         EmbedBuilder e = new EmbedBuilder();
         e.setColor(Color.CYAN);
         e.setTitle("Welcome to " + s.guild.getName());
@@ -24,8 +26,9 @@ public class Events {
 
     public static void leave(@NotNull GuildMemberRemoveEvent event) {
         GuildSettings s = getGuildSettings(event.getGuild());
-        if (s == null) return;
-        TextChannel t = (TextChannel) s.leave;
+        assert s != null;
+        TextChannel t = s.leave;
+        if (t == null) return;
         EmbedBuilder e = new EmbedBuilder();
         e.setColor(Color.RED);
         e.setTitle("Welcome to " + s.guild.getName());

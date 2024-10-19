@@ -1,4 +1,4 @@
-package org.matita08;
+package org.matita08.listener;
 
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.channel.*;
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.interactions.components.selections.*;
 
 import java.awt.*;
 
-import static org.matita08.Utilities.*;
+import static org.matita08.tools.Utilities.*;
 
 public class SlashCommands {
     public static void hello(SlashCommandInteractionEvent event) {
@@ -25,26 +25,21 @@ public class SlashCommands {
             event.reply("pong!\nmy ping is: " + event.getJDA().getGatewayPing() + "ms").queue();
         else {
             long time = System.currentTimeMillis();
-            event.reply("Pong!").flatMap(v ->
-                    event.getHook().editOriginalFormat("Pong: %d ms", System.currentTimeMillis() - time) // then edit original
+            event.reply("Pong!").flatMap(v -> event.getHook().editOriginalFormat("Pong: %d ms", System.currentTimeMillis() - time) // then edit original
             ).queue(); // Queue both reply and edit
         }
     }
 
     public static void setChannel(SlashCommandInteractionEvent event) {
-        event.reply("elaborating....").setEmphemeral(true).queue();
-        if (!event.isFromGuild() || event.getGuild() == null) {
-            onlyGuidAccepted(event);
-            return;
-        }
+        if (onlyGuild(event)) return;
+        event.reply("elaborating....").setEphemeral(true).queue();
         Channel c = event.getOption("channel").getAsChannel();
         switch (event.getOption("type").getAsString()) {
-            case "join" -> getGuildSettings(event.getGuild()).join = c;
-            case "leave" -> getGuildSettings(event.getGuild()).leave = c;
-case "log" -> getGuildSettings(event.getGuild()).logChannel = c;
+            case "join" -> getGuildSettings(event.getGuild()).join = (TextChannel) c;
+            case "leave" -> getGuildSettings(event.getGuild()).leave = (TextChannel) c;
+            case "log" -> getGuildSettings(event.getGuild()).logChannel = (TextChannel) c;
         }
-        TextChannel t = getGuildSettings(event.getGuild()).logChannel == null ? (TextChannel) event.getChannel() : getGuildSettings(event.getGuild()).logChannel;
-        t.sendMessage(event.getOption("type").getAsString() + " was just set to " + c.getAsMention() + " by " + event.getUser().getAsMention()).queue();
+        log((TextChannel) event.getChannel(), event.getGuild(), event.getOption("type").getAsString() + " channel was just set to " + c.getAsMention() + " by " + event.getUser().getAsMention());
     }
 
     public static void ticket(SlashCommandInteractionEvent event) {
@@ -58,19 +53,24 @@ case "log" -> getGuildSettings(event.getGuild()).logChannel = c;
         e.setTitle("Open a new ticket");
         e.setDescription("Seleziona la categoria");
         event.reply("sending embed in " + c.getAsMention()).queue();
-        c.sendMessageEmbeds(e.build()).addActionRow(event.getOption("type").getAsBoolean() ? StringSelectMenu.create("new-ticket-type")
-                .addOption("Discord", "Discord", "Report a issue of the discord", Emoji.fromFormatted(":discord:1296934945956171857")).build()
-                : Button.primary("Discord", "Discord"))
-        ;
+        c.sendMessageEmbeds(e.build()).addActionRow(event.getOption("type").getAsBoolean() ? StringSelectMenu.create("new-ticket-type").addOption("Discord", "Discord", "Report a issue of the discord", Emoji.fromFormatted(":discord:1296934945956171857")).build() : Button.primary("Discord", "Discord"));
     }
-public static void setrule(SlashCommandInteractionEvent event) {
-event.reply("elaborating....").setEmphemeral(true).queue();
-        if (!event.isFromGuild() || event.getGuild() == null) {
-            onlyGuidAccepted(event);
-            return;
-        }
-}
-    private static void onlyGuidAccepted(GenericCommandInteractionEvent event) {
+
+    public static void setrule(SlashCommandInteractionEvent event) {
+        if (onlyGuild(event)) return;
+        event.reply("elaborating....").setEphemeral(true).queue();
+
+    }
+
+    /**
+     * Reply to an event specifying it's only for guilds
+     *
+     * @param event the event to reply if it isn't from a guild
+     * @return false if it is from a guild, true overwise
+     */
+    private static boolean onlyGuild(GenericCommandInteractionEvent event) {
+        if (event.isFromGuild() || event.getGuild() != null) return false;
         event.reply("the interaction has failed since this command is for guilds ony (you are in DM)").queue();
+        return true;
     }
 }
