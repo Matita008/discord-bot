@@ -47,7 +47,7 @@ public class Utilities {
                                     .addOptions(new OptionData(OptionType.CHANNEL, "channel", "Channel of where to send log messages", true)
                                                     .setChannelTypes(ChannelType.TEXT, ChannelType.NEWS),
                                             new OptionData(OptionType.INTEGER, "type", "the type of log", true)
-                                                    .addChoices(new Command.Choice("Welcome", 1), new Command.Choice("Leave", 2))),
+                                                    .addChoices(new Command.Choice("Welcome", "join"), new Command.Choice("Leave", "leave"), new Command.Choice("Log","log"))),
                             Commands.slash("ticket", "send the ticket embed").setDefaultPermissions(DefaultMemberPermissions.DISABLED)
                                     .addOptions(new OptionData(OptionType.CHANNEL, "textchannel", "The channel for sending the ticket embed,null to select the current", true)
                                                     .setChannelTypes(ChannelType.TEXT, ChannelType.NEWS),
