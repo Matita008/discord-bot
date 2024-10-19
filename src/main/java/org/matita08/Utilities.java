@@ -35,6 +35,10 @@ public class Utilities {
         guildsSettings = tmp;
     }
 
+    public static void log(TextChannel c,@NotNull Guild g,String message) {
+        if(getGuildSetting(g).logChannel!=null) c=(TextChannel)getGuildSetting(g).logChannel;
+        c.sendMessage(message);
+    }
     // This method is called when the bot is ready to add commands. This is where we add the commands to the server.
     public static void loadSlashCommands(Guild g) {
         if (g != null) {
