@@ -56,7 +56,7 @@ public class SlashCommands {
         c.sendMessageEmbeds(e.build()).addActionRow(event.getOption("type").getAsBoolean() ? StringSelectMenu.create("new-ticket-type").addOption("Discord", "Discord", "Report a issue of the discord", Emoji.fromFormatted(":discord:1296934945956171857")).build() : Button.primary("Discord", "Discord"));
     }
 
-    public static void setrule(SlashCommandInteractionEvent event) {
+    public static void setrule(SlashCommandInteractionEvent event) {//TODO implement rules
         if (onlyGuild(event)) return;
         event.reply("elaborating....").setEphemeral(true).queue();
 

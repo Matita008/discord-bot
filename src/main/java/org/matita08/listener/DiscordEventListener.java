@@ -30,7 +30,7 @@ public class DiscordEventListener extends ListenerAdapter {
             case "ticket" -> ticket(event);
             case "setchannel" -> setChannel(event);
             case "setrule" -> setrule(event);
-            default -> unrecognized(event);
+            //default -> unrecognized(event);
         }
     }
 
