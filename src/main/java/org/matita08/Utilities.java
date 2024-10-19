@@ -35,6 +35,10 @@ public class Utilities {
         guildsSettings = tmp;
     }
 
+    public static void log(TextChannel c,@NotNull Guild g,String message) {
+        if(getGuildSetting(g).logChannel!=null) c=(TextChannel)getGuildSetting(g).logChannel;
+        c.sendMessage(message);
+    }
     // This method is called when the bot is ready to add commands. This is where we add the commands to the server.
     public static void loadSlashCommands(Guild g) {
         if (g != null) {
@@ -47,7 +51,7 @@ public class Utilities {
                                     .addOptions(new OptionData(OptionType.CHANNEL, "channel", "Channel of where to send log messages", true)
                                                     .setChannelTypes(ChannelType.TEXT, ChannelType.NEWS),
                                             new OptionData(OptionType.INTEGER, "type", "the type of log", true)
-                                                    .addChoices(new Command.Choice("Welcome", 1), new Command.Choice("Leave", 2))),
+                                                    .addChoices(new Command.Choice("Welcome", "join"), new Command.Choice("Leave", "leave"), new Command.Choice("Log","log"))),
                             Commands.slash("ticket", "send the ticket embed").setDefaultPermissions(DefaultMemberPermissions.DISABLED)
                                     .addOptions(new OptionData(OptionType.CHANNEL, "textchannel", "The channel for sending the ticket embed,null to select the current", true)
                                                     .setChannelTypes(ChannelType.TEXT, ChannelType.NEWS),

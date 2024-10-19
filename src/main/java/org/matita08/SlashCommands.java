@@ -32,18 +32,19 @@ public class SlashCommands {
     }
 
     public static void setChannel(SlashCommandInteractionEvent event) {
-        event.reply("elaborating....").queue();
+        event.reply("elaborating....").setEmphemeral(true).queue();
         if (!event.isFromGuild() || event.getGuild() == null) {
             onlyGuidAccepted(event);
             return;
         }
         Channel c = event.getOption("channel").getAsChannel();
-        switch (event.getOption("type").getAsInt()) {
-            case 1 -> getGuildSettings(event.getGuild()).join = c;
-            case 2 -> getGuildSettings(event.getGuild()).leave = c;
+        switch (event.getOption("type").getAsString()) {
+            case "join" -> getGuildSettings(event.getGuild()).join = c;
+            case "leave" -> getGuildSettings(event.getGuild()).leave = c;
+case "log" -> getGuildSettings(event.getGuild()).logChannel = c;
         }
         TextChannel t = getGuildSettings(event.getGuild()).logChannel == null ? (TextChannel) event.getChannel() : getGuildSettings(event.getGuild()).logChannel;
-        t.sendMessage(event.getOption("type").toString() + " was just set to " + c.getAsMention() + " by " + event.getUser().getAsMention()).queue();
+        t.sendMessage(event.getOption("type").getAsString() + " was just set to " + c.getAsMention() + " by " + event.getUser().getAsMention()).queue();
     }
 
     public static void ticket(SlashCommandInteractionEvent event) {
@@ -62,7 +63,13 @@ public class SlashCommands {
                 : Button.primary("Discord", "Discord"))
         ;
     }
-
+public static void setrule(SlashCommandInteractionEvent event) {
+event.reply("elaborating....").setEmphemeral(true).queue();
+        if (!event.isFromGuild() || event.getGuild() == null) {
+            onlyGuidAccepted(event);
+            return;
+        }
+}
     private static void onlyGuidAccepted(GenericCommandInteractionEvent event) {
         event.reply("the interaction has failed since this command is for guilds ony (you are in DM)").queue();
     }
