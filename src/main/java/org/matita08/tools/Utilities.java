@@ -72,25 +72,31 @@ public class Utilities {
      * @param g the guild you want to add the slash interactions
      */
     public static void loadSlashCommands(Guild g) {
-        if (g != null) {
-            CommandListUpdateAction commands = g.updateCommands();
-            commands.addCommands(Commands.slash("hello", "Have the bot say hello to you in an ephemeral message!"),
-                    Commands.slash("ping", "ping the bot to see if is online")
-                            .addOptions(new OptionData(OptionType.BOOLEAN, "type", "true or unset to see the internet ping, false to see the lag of the bot", false)),
-                    Commands.slash("error", "Send an invalid command to the bot to error it").setDefaultPermissions(DefaultMemberPermissions.DISABLED),
-                    Commands.slash("setchannel", "set a channel as a log").setDefaultPermissions(DefaultMemberPermissions.DISABLED)
-                            .addOptions(new OptionData(OptionType.CHANNEL, "channel", "Channel of where to send log messages", true)
-                                            .setChannelTypes(ChannelType.TEXT),
-                                    new OptionData(OptionType.STRING, "type", "The type of log", true)
-                                            .addChoices(new Command.Choice("Welcome", "join"), new Command.Choice("Leave", "leave"), new Command.Choice("Log", "log"))),
-                    Commands.slash("ticket", "send the ticket embed").setDefaultPermissions(DefaultMemberPermissions.DISABLED)
-                            .addOptions(new OptionData(OptionType.CHANNEL, "textchannel", "The channel for sending the ticket embed,null to select the current", true)
-                                            .setChannelTypes(ChannelType.TEXT),
-                                    new OptionData(OptionType.BOOLEAN, "type", "true to use dropdown mode, false to use buttons", true)),
-                    Commands.slash("setrule", "Set a specified rule").setDefaultPermissions(DefaultMemberPermissions.DISABLED)
-                            .addOptions(new OptionData(OptionType.STRING, "rule", "The rule to configure", true),
-                                    new OptionData(OptionType.BOOLEAN, "config", "What to set", true))).queue();
-        }
+        if (g != null) loadSlashCommands(g.updateCommands());
+    }
+
+    /**
+     * add all the base slash commands in the specified CommandListUpdateAction
+     *
+     * @param commands the CommandListUpdateAction which you want them added
+     */
+    public static void loadSlashCommands(@NotNull CommandListUpdateAction commands) {
+        commands.addCommands(Commands.slash("hello", "Have the bot say hello to you in an ephemeral message!"),
+                Commands.slash("ping", "ping the bot to see if is online")
+                        .addOptions(new OptionData(OptionType.BOOLEAN, "type", "true or unset to see the internet ping, false to see the lag of the bot", false)),
+                Commands.slash("error", "Send an invalid command to the bot to error it").setDefaultPermissions(DefaultMemberPermissions.DISABLED),
+                Commands.slash("setchannel", "set a channel as a log").setDefaultPermissions(DefaultMemberPermissions.DISABLED)
+                        .addOptions(new OptionData(OptionType.CHANNEL, "channel", "Channel of where to send log messages", true)
+                                        .setChannelTypes(ChannelType.TEXT),
+                                new OptionData(OptionType.STRING, "type", "The type of log", true)
+                                        .addChoices(new Command.Choice("Welcome", "join"), new Command.Choice("Leave", "leave"), new Command.Choice("Log", "log"))),
+                Commands.slash("ticket", "send the ticket embed").setDefaultPermissions(DefaultMemberPermissions.DISABLED)
+                        .addOptions(new OptionData(OptionType.CHANNEL, "textchannel", "The channel for sending the ticket embed,null to select the current", true)
+                                        .setChannelTypes(ChannelType.TEXT),
+                                new OptionData(OptionType.BOOLEAN, "type", "true to use dropdown mode, false to use buttons", true)),
+                Commands.slash("setrule", "Set a specified rule").setDefaultPermissions(DefaultMemberPermissions.DISABLED)
+                        .addOptions(new OptionData(OptionType.STRING, "rule", "The rule to configure", true),
+                                new OptionData(OptionType.BOOLEAN, "config", "What to set", true))).queue();
     }
 
     /**
@@ -101,9 +107,36 @@ public class Utilities {
      */
     public static void loadAdminCommands(Guild g) {
         if (g == null) return;
-        CommandListUpdateAction commands = g.updateCommands();
+        loadSlashCommands(g.updateCommands());
+        loadAdminCommands(g.updateCommands());
+    }
+
+    public static void loadAdminCommands(@NotNull CommandListUpdateAction commands) {
         commands.addCommands(Commands.slash("kill", "Save current configuration and terminate the execution of the bot"),
                 Commands.slash("emergencyswitch", "USE ONY IN CASE OS AN EMERGENCY,IT WILL KILL THE BOT IMMEDIATLY").setDefaultPermissions(DefaultMemberPermissions.DISABLED),
                 Commands.slash("save", "Save current configuration of the bot")).queue();
+    }
+
+    /**
+     * send a message to all log channel and in the console
+     *
+     * @param message the message to send
+     */
+    public static void logAll(String message) {
+        logAll(message, null);
+    }
+
+    /**
+     * send a message to all log channel and in the console
+     *
+     * @param message the message to send
+     * @param u       The user who triggered the action
+     */
+    public static void logAll(String message, @Nullable User u) {
+        for (GuildSettings s : guildsSettings) {
+            if (s.logChannel != null)
+                s.logChannel.sendMessage(message + "\n Triggered by " + (u == null ? "the console" : (u.getAsMention() + "(" + u.getGlobalName() + ")"))).queue();
+        }
+        System.out.println(message + "\n Triggered by " + (u == null ? "the console" : (u.getAsMention() + "(" + u.getGlobalName() + ")")));
     }
 }
