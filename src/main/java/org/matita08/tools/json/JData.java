@@ -1,7 +1,7 @@
 package org.matita08.tools.json;
 
 public interface JData {
-    static String parse(String s) {
+    static String format(String s) {
         boolean skip = false;
         StringBuilder r = new StringBuilder();
         for (char c : s.toCharArray()) {
