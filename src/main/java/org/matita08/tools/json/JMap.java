@@ -20,22 +20,22 @@ public class JMap implements JData {
      *
      * @param d the HashMap to replace the stored data with
      */
-    public void set(HashMap<String, JData> d) {
+    public void set(HashMap<JVar, JData> d) {
         data = d;
     }
 
-    public void add(String key, JData value) {
+    public void add(JVar key, JData value) {
         data.put(key, value);
     }
 
-    public void addall(HashMap<String, JData> h) {
+    public void addall(HashMap<JVar, JData> h) {
         data.putAll(h);
     }
 
     /**
      * @return the HashMap of stored data
      */
-    public HashMap<String, JData> get() {
+    public HashMap<JVar, JData> get() {
         return data;
     }
 }
