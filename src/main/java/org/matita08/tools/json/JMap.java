@@ -16,14 +16,16 @@ public class JMap implements JData {
     }
 
     /**
-     * IMPORTANT!
+     * IMPORTANT! it will override the saved data
      *
      * @param d the HashMap to replace the stored data with
      */
     public void set(HashMap<JVar, JData> d) {
         data = d;
     }
-
+public void reset(){
+data= new HashMap<>();
+}
     public void add(JVar key, JData value) {
         data.put(key, value);
     }
