@@ -1,7 +1,8 @@
 package org.matita08.tools.json;
 
+@SuppressWarnings("unused")
 public class JArray implements JData {
-
+    public JArray() {}
     @Override
     public String parse(String s) {
         return "";

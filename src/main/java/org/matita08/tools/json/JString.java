@@ -1,9 +1,12 @@
 package org.matita08.tools.json;
 
-import static org.matita08.tools.Utilities.*;
+import static org.matita08.tools.Utilities.format;
 
+@SuppressWarnings("unused")
 public class JString implements JData, JVar {
     private String data = "";
+
+    public JString() {}
 
     @Override
     public String parse(String s) {

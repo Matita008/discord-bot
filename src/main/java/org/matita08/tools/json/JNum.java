@@ -1,8 +1,13 @@
 package org.matita08.tools.json;
 
+import static java.lang.Math.abs;
+
+@SuppressWarnings("unused")
 public class JNum implements JData, JVar {
-    private final long num = 0;
-    private final int pow = 0;
+    private long num = 0;
+    private int pow = 0;
+
+    public JNum() {}
 
     @Override
     public String parse(String s) {
@@ -11,15 +16,10 @@ public class JNum implements JData, JVar {
 
     @Override
     public String toJson() {
-StringBuilder b=new StringBuilder();
-if(pow<0){
-return num;//TODO think for more than a second on this
-}
-b.append(num);
-for (int i=0;i<pow;i++) {
-b.append('0');
-}
-        return b.toString;
+        if(pow < 0) {
+            return "0." + "0".repeat(abs(pow) - 1) + num;
+        }
+        return num + "0".repeat(pow);
     }
 
     @Override
@@ -27,4 +27,8 @@ b.append('0');
         return toJson();
     }
 
+    public void set(double n) {
+        num = (long) (n * 100);
+        pow = -2;
+    }
 }
