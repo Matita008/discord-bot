@@ -1,14 +1,6 @@
 package org.matita08.tools.json;
 
-public interface JData {
-    /**
-     Parse a json-formatted string
-
-     @param s the string to parse
-     @return the remaining string after the parse
-     */
-    String parse(String s);
-
+public interface JData extend JType{
     /**
      Return a json-formatted string
 

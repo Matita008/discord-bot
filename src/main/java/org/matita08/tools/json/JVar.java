@@ -1,7 +1,5 @@
 package org.matita08.tools.json;
 
-public interface JVar {
-    String parse(String s);
-
+public interface JVar extend JType{
     String getRaw();
 }
